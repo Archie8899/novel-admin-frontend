@@ -1,0 +1,12 @@
+[railway]
+entrypoint = "static"
+
+[build]
+  builder = "nixpacks"
+  buildCommand = "npm install && npm run build"
+  distFolder = "dist"
+
+[deploy]
+  healthCheckPath = "/"
+  restartPolicyType = "on-failure"
+  restartPolicyMaxRetries = 10
