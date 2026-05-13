@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Table, Button, Space, Input, Select, Form, Modal, Popconfirm, message, Tag, Typography, Image, Switch, DatePicker, InputNumber, Row, Col, Upload, Radio } from 'antd';
-import { PlusOutlined, EditOutlined, DeleteOutlined, UnorderedListOutlined, UploadOutlined } from '@ant-design/icons';
+import { PlusOutlined, EditOutlined, DeleteOutlined, UnorderedListOutlined, UploadOutlined, SearchOutlined } from '@ant-design/icons';
 import { useNavigate } from 'react-router-dom';
 import { apiRequest, default as api } from '../services/api';
 import dayjs from 'dayjs';
@@ -45,6 +45,13 @@ const NovelList: React.FC = () => {
   const [submitLoading, setSubmitLoading] = useState(false);
   const [coverType, setCoverType] = useState<'url' | 'upload'>('url');
   const [uploading, setUploading] = useState(false);
+
+  // 搜索筛选状态
+  const [searchNovelId, setSearchNovelId] = useState('');
+  const [searchName, setSearchName] = useState('');
+  const [searchCategory, setSearchCategory] = useState<string | undefined>();
+  const [searchStatus, setSearchStatus] = useState<string | undefined>();
+  const [searchTimeRange, setSearchTimeRange] = useState<[dayjs.Dayjs, dayjs.Dayjs] | null>(null);
 
   // 封面上传 props
   const uploadProps: UploadProps = {
@@ -114,11 +121,6 @@ const NovelList: React.FC = () => {
     },
   ];
 
-  useEffect(() => {
-    fetchData();
-    fetchOptions();
-  }, []);
-
   const fetchOptions = async () => {
     try {
       const [catRes, compRes] = await Promise.all([
@@ -135,7 +137,16 @@ const NovelList: React.FC = () => {
   const fetchData = async () => {
     setLoading(true);
     try {
-      const res: any = await apiRequest.get('/novels', { page: pagination.current, pageSize: pagination.pageSize });
+      const params: any = { page: pagination.current, pageSize: pagination.pageSize };
+      if (searchNovelId) params.novelId = searchNovelId;
+      if (searchName) params.name = searchName;
+      if (searchCategory) params.categoryId = searchCategory;
+      if (searchStatus) params.status = searchStatus;
+      if (searchTimeRange) {
+        params.startDate = searchTimeRange[0].format('YYYY-MM-DD');
+        params.endDate = searchTimeRange[1].format('YYYY-MM-DD');
+      }
+      const res: any = await apiRequest.get('/novels', params);
       setData(res.data || []);
       setPagination((prev) => ({ ...prev, total: res.total || 0 }));
     } catch (error) {
@@ -143,6 +154,22 @@ const NovelList: React.FC = () => {
     } finally {
       setLoading(false);
     }
+  };
+
+  useEffect(() => {
+    fetchOptions();
+  }, []);
+
+  useEffect(() => {
+    fetchData();
+  }, [pagination.current, pagination.pageSize, searchNovelId, searchName, searchCategory, searchStatus, searchTimeRange]);
+
+  const resetFilters = () => {
+    setSearchNovelId('');
+    setSearchName('');
+    setSearchCategory(undefined);
+    setSearchStatus(undefined);
+    setSearchTimeRange(null);
   };
 
   const handleAdd = () => {
@@ -159,7 +186,6 @@ const NovelList: React.FC = () => {
 
   const handleEdit = (record: Novel) => {
     setEditingNovel(record);
-    // 判断封面是URL还是需要上传
     const isUrl = record.coverImage?.startsWith('http');
     setCoverType(isUrl ? 'url' : 'upload');
     form.setFieldsValue({
@@ -196,7 +222,6 @@ const NovelList: React.FC = () => {
       const values = await form.validateFields();
       setSubmitLoading(true);
       
-      // 处理授权时间范围
       const authTimeRange = values.authTimeRange;
       const submitData = {
         ...values,
@@ -228,6 +253,50 @@ const NovelList: React.FC = () => {
         <Title level={3} style={{ margin: 0 }}>小说管理</Title>
         <Button type="primary" icon={<PlusOutlined />} onClick={handleAdd}>新建小说</Button>
       </div>
+
+      {/* 搜索筛选区域 */}
+      <Space style={{ marginBottom: 16 }} wrap>
+        <Input 
+          placeholder="小说编号" 
+          value={searchNovelId} 
+          onChange={(e) => setSearchNovelId(e.target.value)} 
+          style={{ width: 140 }} 
+          allowClear 
+          prefix={<SearchOutlined />} 
+        />
+        <Input 
+          placeholder="小说名称" 
+          value={searchName} 
+          onChange={(e) => setSearchName(e.target.value)} 
+          style={{ width: 140 }} 
+          allowClear 
+        />
+        <Select 
+          placeholder="分类" 
+          value={searchCategory} 
+          onChange={(v) => setSearchCategory(v)} 
+          style={{ width: 140 }}
+          allowClear
+        >
+          {categories.map((c) => <Option key={c.id} value={c.id}>{c.name}</Option>)}
+        </Select>
+        <Select 
+          placeholder="状态" 
+          value={searchStatus} 
+          onChange={(v) => setSearchStatus(v)} 
+          style={{ width: 100 }}
+          allowClear
+        >
+          <Option value="online">上架</Option>
+          <Option value="offline">下架</Option>
+        </Select>
+        <RangePicker 
+          value={searchTimeRange}
+          onChange={(dates) => setSearchTimeRange(dates as [dayjs.Dayjs, dayjs.Dayjs] | null)}
+          style={{ width: 240 }}
+        />
+        <Button onClick={resetFilters}>重置</Button>
+      </Space>
 
       <Table 
         dataSource={data} 

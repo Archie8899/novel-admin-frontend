@@ -61,10 +61,10 @@ const Dashboard: React.FC = () => {
       const orderRes = await apiRequest.get('/orders', { pageSize: 1 });
 
       setStats({
-        novelCount: novelRes.data.total || 0,
-        productCount: productRes.data.total || 0,
-        userCount: userRes.data.total || 0,
-        orderCount: orderRes.data.total || 0,
+        novelCount: novelRes.total || 0,
+        productCount: productRes.total || 0,
+        userCount: userRes.total || 0,
+        orderCount: orderRes.total || 0,
         todayOrderCount: Math.floor(Math.random() * 50) + 10,
         todayRevenue: Math.floor(Math.random() * 500) + 100,
       });

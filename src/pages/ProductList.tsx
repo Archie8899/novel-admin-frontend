@@ -125,9 +125,14 @@ const ProductList: React.FC = () => {
     )},
     { title: '系统', dataIndex: 'os', key: 'os', width: 80 },
     { title: '价格', dataIndex: 'price', key: 'price', width: 80 },
-    { title: '规格', dataIndex: 'durationOrCoins', key: 'durationOrCoins', width: 100, render: (_text: string, record: Product) => (
-      <span>{record.type === 'recharge' ? `${record.coins}金币` : record.subscriptionDuration}</span>
-    )},
+    { title: '规格', dataIndex: 'durationOrCoins', key: 'durationOrCoins', width: 100, render: (_text: string, record: Product) => {
+      if (!record.durationOrCoins) {
+        return record.type === 'recharge' 
+          ? <span>{record.coins || 0}金币</span>
+          : <span>{record.subscriptionDuration || '-'}</span>;
+      }
+      return <span>{record.durationOrCoins}</span>;
+    }},
     { title: '状态', dataIndex: 'status', key: 'status', width: 80, render: (s: string) => <Tag color={s === 'active' ? 'green' : 'red'}>{s === 'active' ? '有效' : '无效'}</Tag> },
     { title: '创建时间', dataIndex: 'createdAt', key: 'createdAt', width: 160 },
     { title: '操作', key: 'action', width: 150, render: (_: any, record: Product) => (
