@@ -3,7 +3,7 @@ entrypoint = "static"
 
 [build]
 builder = "nixpacks"
-buildCommand = "npm install && npm run build"
+buildCommand = "npm install && VITE_API_URL=https://novel-admin-backend-production.up.railway.app npm run build"
 distFolder = "dist"
 
 [deploy]
