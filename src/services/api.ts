@@ -1,7 +1,9 @@
 import axios, { AxiosError } from 'axios';
 import { message } from 'antd';
 
-const API_BASE_URL = '/api';
+// 使用环境变量配置 API 地址，默认为空（使用相对路径 /api）
+// 部署时可在 Railway 设置 VITE_API_URL=https://你的后端地址.railway.app
+const API_BASE_URL = import.meta.env.VITE_API_URL || '/api';
 
 const api = axios.create({
   baseURL: API_BASE_URL,
