@@ -49,16 +49,16 @@ const Dashboard: React.FC = () => {
     setLoading(true);
     try {
       // 获取小说数量
-      const novelRes = await apiRequest.get('/novels', { pageSize: 1 });
+      const novelRes: any = await apiRequest.get('/novels', { pageSize: 1 });
       
       // 获取商品数量
-      const productRes = await apiRequest.get('/products', { pageSize: 1 });
+      const productRes: any = await apiRequest.get('/products', { pageSize: 1 });
       
       // 获取用户数量
-      const userRes = await apiRequest.get('/app-users', { pageSize: 1 });
+      const userRes: any = await apiRequest.get('/app-users', { pageSize: 1 });
       
       // 获取订单数量
-      const orderRes = await apiRequest.get('/orders', { pageSize: 1 });
+      const orderRes: any = await apiRequest.get('/orders', { pageSize: 1 });
 
       setStats({
         novelCount: novelRes.total || 0,

@@ -22,6 +22,7 @@ interface Product {
   statusDisplay: string;
   createdBy: string;
   createdAt: string;
+  durationOrCoins?: string;
 }
 
 const ProductList: React.FC = () => {
