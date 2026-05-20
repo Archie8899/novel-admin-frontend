@@ -18,6 +18,8 @@ import OrderList from './pages/OrderList';
 import UserList from './pages/UserList';
 import UserSegmentList from './pages/UserSegmentList';
 import PricingTierList from './pages/PricingTierList';
+import ColumnList from './pages/ColumnList';
+import HomepageStrategyList from './pages/HomepageStrategyList';
 import AdminUserList from './pages/AdminUserList';
 import RoleList from './pages/RoleList';
 import DepartmentList from './pages/DepartmentList';
@@ -68,6 +70,8 @@ const App = () => {
               <Route path="users" element={<UserList />} />
               <Route path="user-segments" element={<UserSegmentList />} />
               <Route path="pricing-tiers" element={<PricingTierList />} />
+              <Route path="columns" element={<ColumnList />} />
+              <Route path="homepage-strategies" element={<HomepageStrategyList />} />
               <Route path="admin-users" element={<AdminUserList />} />
               <Route path="roles" element={<RoleList />} />
               <Route path="departments" element={<DepartmentList />} />

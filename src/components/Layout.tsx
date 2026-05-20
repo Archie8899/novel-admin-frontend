@@ -92,6 +92,8 @@ const LayoutPage: React.FC = () => {
       children: [
         { key: '/user-segments', label: '用户分层' },
         { key: '/pricing-tiers', label: '分层定价' },
+        { key: '/columns', label: '栏目管理' },
+        { key: '/homepage-strategies', label: '首页管理' },
       ],
     },
     {

@@ -249,4 +249,70 @@ export const fbAuthAPI = {
     apiRequest.delete<any>(`/fb-authorizations/${id}`),
 };
 
+// 栏目管理 API
+export const columnAPI = {
+  // 获取栏目列表
+  list: (params?: { name?: string; terminal?: string; language?: string; style?: string; recommendMode?: string; status?: string; page?: number; pageSize?: number }) =>
+    apiRequest.get<{ data: any[]; total: number; page: number; pageSize: number }>('/columns', params),
+  
+  // 获取有效栏目列表（用于下拉选择）
+  getOptions: (params?: { terminal?: string; language?: string }) =>
+    apiRequest.get<any[]>('/columns/options', params),
+  
+  // 获取单个栏目
+  getOne: (id: string) =>
+    apiRequest.get<any>(`/columns/${id}`),
+  
+  // 新建栏目
+  create: (data: { name: any; terminal: string[]; language: string; style: string; recommendMode: string; recommendRules?: any; status?: string }) =>
+    apiRequest.post<any>('/columns', data),
+  
+  // 编辑栏目
+  update: (id: string, data: { name?: any; terminal?: string[]; language?: string; style?: string; recommendMode?: string; recommendRules?: any; status?: string }) =>
+    apiRequest.put<any>(`/columns/${id}`, data),
+  
+  // 删除栏目
+  delete: (id: string) =>
+    apiRequest.delete<any>(`/columns/${id}`),
+  
+  // 获取栏目小说列表
+  getNovels: (id: string, params?: { page?: number; pageSize?: number }) =>
+    apiRequest.get<{ data: any[]; total: number; page: number; pageSize: number }>(`/columns/${id}/novels`, params),
+  
+  // 添加小说到栏目
+  addNovel: (id: string, data: { novelId: string; sort?: number }) =>
+    apiRequest.post<any>(`/columns/${id}/novels`, data),
+  
+  // 更新栏目小说排序
+  updateNovel: (id: string, novelId: string, data: { sort: number }) =>
+    apiRequest.put<any>(`/columns/${id}/novels/${novelId}`, data),
+  
+  // 从栏目移除小说
+  removeNovel: (id: string, novelId: string) =>
+    apiRequest.delete<any>(`/columns/${id}/novels/${novelId}`),
+};
+
+// 首页策略 API
+export const homepageStrategyAPI = {
+  // 获取策略列表
+  list: (params?: { name?: string; terminal?: string; userSegmentId?: string; status?: string; page?: number; pageSize?: number }) =>
+    apiRequest.get<{ data: any[]; total: number; page: number; pageSize: number }>('/homepage-strategies', params),
+  
+  // 获取单个策略
+  getOne: (id: string) =>
+    apiRequest.get<any>(`/homepage-strategies/${id}`),
+  
+  // 新建策略
+  create: (data: { name: string; terminal: string; userSegmentId: string; priority?: number; status?: string; columns?: any[] }) =>
+    apiRequest.post<any>('/homepage-strategies', data),
+  
+  // 编辑策略
+  update: (id: string, data: { name?: string; terminal?: string; userSegmentId?: string; priority?: number; status?: string; columns?: any[] }) =>
+    apiRequest.put<any>(`/homepage-strategies/${id}`, data),
+  
+  // 删除策略
+  delete: (id: string) =>
+    apiRequest.delete<any>(`/homepage-strategies/${id}`),
+};
+
 export default api;
